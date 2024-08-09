@@ -1,0 +1,15 @@
+header {
+  background-color: $main-color;
+  height: $height-header;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: $padding-header $padding-content 0 $padding-content;
+
+  h1 {
+    font-family: $font-family-secondary;
+    font-size: $font-size-secondary;
+    color: $secondary-color;
+    line-height: $line-height-header;
+  }
+}

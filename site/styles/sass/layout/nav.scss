@@ -1,0 +1,32 @@
+nav {
+  background-color: $main-color;
+  color: $secondary-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  ul {
+    display: flex;
+    padding: 0;
+  }
+
+  li {
+    list-style: none;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    a {
+      display: inline-block;
+      padding: $padding-content;
+      color: $secondary-color;
+      text-decoration: none;
+    }
+    &:hover {
+      background: darken($main-color, 10%);
+      text-shadow: 0 0 8px $secondary-color;
+    }
+    &:active {
+      color: $secondary-color;
+      background-color: $main-color;
+    }
+  }
+}

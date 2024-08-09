@@ -1,0 +1,21 @@
+body {
+    font-family: $font-family-primary;
+    font-size: $font-size-primary;
+    background-color: $accent-color;
+    color: $color-dark-grey;
+    margin: 0;
+    padding: 0;
+  }
+  
+  h1 {
+    color: $main-color;
+    font-size: $font-size-header;
+    font-weight: bold;
+    margin-bottom: $margin-bottom-header;
+  }
+  
+  p {
+    line-height: $line-height-body;
+    margin-bottom: $margin-bottom-paragraph;
+  }
+  

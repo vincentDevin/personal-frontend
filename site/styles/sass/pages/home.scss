@@ -1,0 +1,25 @@
+div.home-container {
+    text-align: center;
+
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+        border-radius: 50%;
+    }
+
+    h1 {
+        font-size: 48px;
+        margin: 20px 20px 0 20px;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+    }
+    
+    p {
+        text-align: left;
+    }
+}
+

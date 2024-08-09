@@ -1,0 +1,49 @@
+footer {
+  background-color: darken($main-color, 15%);
+  color: $secondary-color;
+  font-size: $font-size-footer;
+  padding: $padding-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  a {
+    text-decoration: none;
+  }
+
+  div.footer-container {
+    display: inline;
+  }
+
+  div.social-links-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 5px;
+    margin-bottom: 10px;
+
+    .fa {
+      padding: 15px;
+      font-size: 20px;
+      width: 20px;
+      border-radius: 50%;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .fa-linkedin {
+      background: #0A66C2;
+      color: white;
+
+      &:hover {
+        transform: scale(1.1);
+        border: 2px solid #0A66C2;
+        background: white;
+        color: #0A66C2;
+      }
+    }
+  }
+
+  div.copyright-row {
+    text-align: center;
+  }
+}

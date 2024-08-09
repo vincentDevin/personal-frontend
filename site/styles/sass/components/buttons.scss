@@ -1,0 +1,23 @@
+#btnPrev, #btnNext {
+  border: 2px solid $main-color;
+  background-color: darken($main-color, 10%);
+  border-radius: 4px;
+  padding: $padding-content;
+  color: $secondary-color;
+  font-weight: bold;
+}
+
+#mobile-nav-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: $padding-mobile-nav;
+  height: $padding-mobile-nav;
+  color: $secondary-color;
+  font-size: $font-size-mobile-nav;
+  font-weight: bold;
+  line-height: $line-height-mobile-nav;
+  text-align: center;
+  cursor: pointer;
+  display: none;
+}

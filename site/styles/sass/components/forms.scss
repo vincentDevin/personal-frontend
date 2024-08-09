@@ -1,0 +1,67 @@
+div.content-frame-contact h1 {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}
+
+form.control-panel {
+  label {
+    display: block;
+    padding-top: 15px;
+  }
+}
+
+
+div.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .validation-message {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    color: $main-color;
+  }
+}
+
+div.form-validation-messages {
+  display: flex;
+  justify-content: center;
+  color: $main-color;
+  div {
+    margin-left: 15px;
+    margin-right: 15px;
+    padding: 10px 0 10px 0;
+    text-align: left;
+  }
+}
+
+div.contact-form-info {
+  display: flex;
+  justify-content: center;
+}
+
+div.contact-form-comments {
+  display: flex;
+  justify-content: center;
+}
+
+div.contact-form-submit-button {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+
+// Media query for mobile screens
+@media (max-width: 768px) {
+  div.form-container {
+    display: block;
+  }
+
+  div.contact-form-info {
+    display: block;
+  }
+
+}
