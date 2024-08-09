@@ -1,3 +1,4 @@
 # .gitignore
 /certbot
 .env
+site/logs

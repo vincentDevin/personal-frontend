@@ -5,14 +5,18 @@ $pageTitle = "Login";
 $pageDescription = "";
 
 // Function to make a POST request to the API
-function authenticateUser($username, $password) {
+function authenticateUser($username, $password, $recaptchaResponse) {
     $apiUrl = "http://express_api:3000/api/auth/login"; // Adjust the URL as needed
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $apiUrl);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(['username' => $username, 'password' => $password]));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+        'username' => $username,
+        'password' => $password,
+        'g-recaptcha-response' => $recaptchaResponse // Include reCAPTCHA response in the API request
+    ]));
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
     $response = curl_exec($ch);
     $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -32,9 +36,10 @@ function authenticateUser($username, $password) {
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $userNameEntered = $_POST['txtUserName'] ?? NULL;
     $passwordEntered = $_POST['txtPassword'] ?? NULL;
+    $recaptchaResponse = $_POST['g-recaptcha-response'] ?? NULL;
 
-    if ($userNameEntered && $passwordEntered) {
-        $authResponse = authenticateUser($userNameEntered, $passwordEntered);
+    if ($userNameEntered && $passwordEntered && $recaptchaResponse) {
+        $authResponse = authenticateUser($userNameEntered, $passwordEntered, $recaptchaResponse);
 
         if ($authResponse && isset($authResponse['token'])) {
             session_regenerate_id(true);
@@ -46,8 +51,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             exit();
         } else {
             // Handle failed login attempt
-            $error = "Invalid username or password.";
+            $error = "Invalid username, password, or reCAPTCHA.";
         }
+    } else {
+        $error = "Please complete all fields and the reCAPTCHA challenge.";
     }
 } elseif ($_SERVER['REQUEST_METHOD'] == "GET") {
     // Destroy the session when user visits login page
@@ -77,11 +84,16 @@ require("../includes/header.inc.php");
                 <br>
                 <input type="password" name="txtPassword" id="txtPassword" required />
                 <br>
+                <!-- reCAPTCHA widget -->
+                <div class="g-recaptcha" data-sitekey="<?php echo(CAPTCHA_SITE); ?>"></div>
+                <br>
                 <input type="submit" value="Log In">
             </div>
         </form>
     </div>
 </main>
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 <?php
 require("../includes/footer.inc.php");

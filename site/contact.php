@@ -12,6 +12,20 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
         exit();
     }
 
+    // Verify the reCAPTCHA response
+    $recaptchaSecret = CAPTCHA_SECRET; // Replace with your secret key
+    $recaptchaResponse = $_POST['g-recaptcha-response'] ?? '';
+    $recaptchaUrl = 'https://www.google.com/recaptcha/api/siteverify';
+    
+    $recaptchaValidation = file_get_contents($recaptchaUrl . '?secret=' . $recaptchaSecret . '&response=' . $recaptchaResponse);
+    $recaptchaResult = json_decode($recaptchaValidation, true);
+
+    if(!$recaptchaResult['success']) {
+        // If reCAPTCHA failed, redirect to error page
+        header("Location: " . PROJECT_DIR . "error.php");
+        exit();
+    }
+
     // Get the data entered by the user
     $firstName = $_POST['txtFirstName'] ?? "";
     $lastName = $_POST['txtLastName'] ?? "";
@@ -86,6 +100,9 @@ require("includes/header.inc.php");
                 <div class="contact-form-comments">
                     <textarea id="txtComments" name="txtComments" placeholder="Type your comments here!"></textarea>
                 </div>
+                <div class="contact-form-comments">
+                    <div class="g-recaptcha" data-sitekey="<?php echo(CAPTCHA_SITE); ?>"></div>
+                </div>
                 <div class="contact-form-submit-button">
                     <input type="submit" value="SUBMIT">
                 </div>
@@ -93,6 +110,7 @@ require("includes/header.inc.php");
         </div>
     </div>
 </main>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <?php
 
 require("includes/footer.inc.php");
