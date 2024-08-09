@@ -134,3 +134,12 @@ Response: {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJ
 Page ID: 4
 Page ID: 2
 Page ID: 1
+Page ID: 4
+Page ID: 2
+Page ID: 1
+API URL: http://express_api:3000/api/auth/login
+HTTP Code: 401
+Response: {"error":"Invalid username or password"}
+API URL: http://express_api:3000/api/auth/login
+HTTP Code: 200
+Response: {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lIiwiaWF0IjoxNzIzMjM5NDE3LCJleHAiOjE3MjMyNDMwMTd9.DPX5Hhe0NvkOsWZTbtLXMW7HZaSJgur-61LQ97MVDug"}
