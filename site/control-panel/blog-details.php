@@ -10,7 +10,7 @@ $errorMessage = '';
 if ($_SERVER['REQUEST_METHOD'] == "GET") {
     if (isset($_GET['pageId'])) {
         $pageId = $_GET['pageId'];
-        $url = "http://express_api:3000/api/pages/{$pageId}";
+        $url = "https://express_api:3000/api/pages/{$pageId}";
         $token = $_SESSION['token']; // Ensure the token is available in the session
         $response = callAPI('GET', $url, false, $token);
 
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
     if (validateBlogPostData($title, $description, $content, $categoryId, $setActive)) {
         if (!empty($pageId)) {
-            $url = "http://express_api:3000/api/pages/{$pageId}";
+            $url = "https://express_api:3000/api/pages/{$pageId}";
             $data = [
                 'title' => $title,
                 'content' => $content,
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 $errorMessage = "Query Issue: page not updated. HTTP Status Code: {$response['status_code']}";
             }
         } else {
-            $url = "http://express_api:3000/api/pages";
+            $url = "https://express_api:3000/api/pages";
             $data = [
                 'title' => $title,
                 'content' => $content,

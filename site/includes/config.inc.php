@@ -18,7 +18,7 @@ ini_set('session.cookie_samesite', 'Strict');
 session_start();
 
 // API Base URL
-define('API_BASE_URL', 'http://express_api:3000/api'); // For Docker internal communication
+define('API_BASE_URL', 'https://express_api:3000/api'); // For Docker internal communication
 
 // Detect if the code is running on localhost or live server
 if ($_SERVER['SERVER_NAME'] == "localhost") {

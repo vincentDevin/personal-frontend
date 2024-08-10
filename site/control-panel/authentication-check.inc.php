@@ -5,7 +5,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
 // Function to verify the token with the API
 function verifyToken($token) {
-    $apiUrl = "http://express_api:3000/api/auth/verify"; // Adjust the URL as needed
+    $apiUrl = "https://express_api:3000/api/auth/verify"; // Adjust the URL as needed
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $apiUrl);
