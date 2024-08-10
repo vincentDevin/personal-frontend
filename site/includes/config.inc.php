@@ -1,24 +1,24 @@
 <?php
 
+// Load environment variables from .env file in the root directory
+if (file_exists(__DIR__ . '/../.env')) {
+    $dotenv = parse_ini_file(__DIR__ . '/../.env');
+    foreach ($dotenv as $key => $value) {
+        putenv("$key=$value");
+    }
+}
+
 // Set session security settings before starting the session
 ini_set('session.cookie_httponly', 1);
-ini_set('session.cookie_secure', 1);
+ini_set('session.cookie_secure', 1); // Ensure this is only set when using HTTPS in production
 ini_set('session.use_strict_mode', 1);
+ini_set('session.cookie_samesite', 'Strict');
 
 // Start the session
 session_start();
 
-// Load sensitive environment variables from Docker secrets
-function getSecret($name, $default = null) {
-    $secretPath = "/run/secrets/{$name}";
-    if (file_exists($secretPath)) {
-        return trim(file_get_contents($secretPath));
-    }
-    return $default;
-}
-
 // API Base URL
-define('API_BASE_URL', 'http://express_api:3000/api'); // Use the Docker service name for internal communication
+define('API_BASE_URL', 'http://express_api:3000/api'); // For Docker internal communication
 
 // Detect if the code is running on localhost or live server
 if ($_SERVER['SERVER_NAME'] == "localhost") {
@@ -26,13 +26,17 @@ if ($_SERVER['SERVER_NAME'] == "localhost") {
     define("PROJECT_DIR", "/");
     define("DEBUG_MODE", TRUE);
     define("ADMIN_EMAIL", "vincentdevin111@gmail.com");
-    define("CAPTCHA_SECRET", "6LftcSMqAAAAABcaIpFPjO1iQKt3sZp26VHiIg0x"); //localhost creds
-    define("CAPTCHA_SITE","6LftcSMqAAAAAMdZL_MNBpd8u2-M1T2D7cvPpqu0"); //localhost creds
+    define("CAPTCHA_SECRET", "6LftcSMqAAAAABcaIpFPjO1iQKt3sZp26VHiIg0x"); // localhost creds
+    define("CAPTCHA_SITE", "6LftcSMqAAAAAMdZL_MNBpd8u2-M1T2D7cvPpqu0"); // localhost creds
 } else {
     // Settings for live site
     define("PROJECT_DIR", "/");
-    define("DEBUG_MODE", TRUE);
+    define("DEBUG_MODE", FALSE); // Disable debug mode for production
     define("ADMIN_EMAIL", "vincentdevin111@gmail.com");
+
+    // Secure CAPTCHA keys for production from .env file
+    define("CAPTCHA_SECRET", getenv('CAPTCHA_SECRET'));
+    define("CAPTCHA_SITE", getenv('CAPTCHA_SITE'));
 }
 
 // Set custom error handler
@@ -53,14 +57,16 @@ if (DEBUG_MODE) {
 function customErrorHandler($errno, $errstr, $errfile, $errline) {
     $errorMsg = "Error: [$errno] $errstr - $errfile:$errline";
     $logPath = __DIR__ . '/../logs/error.log';
+
     if (!file_exists($logPath)) {
         mkdir(dirname($logPath), 0777, true);
     }
     error_log($errorMsg, 3, $logPath);
-    
+
     if (DEBUG_MODE) {
         echo "<b>Error:</b> [$errno] $errstr - $errfile:$errline<br>";
     } else {
+        // No output to the user in production
         header("Location: " . PROJECT_DIR . "error.php");
         exit();
     }
@@ -114,22 +120,11 @@ function callAPI($method, $url, $data = false, $token = null) {
     return ['status_code' => $httpcode, 'response' => json_decode($result, true)];
 }
 
-
-/*
-// Example Usage of API
-$response = callApi('/your-endpoint');
-if ($response['status_code'] == 200) {
-    // Successfully received response
-    $data = $response['response'];
-} else {
-    // Handle error
-    echo "Error: " . $response['status_code'];
-*/
-
 // Redirect to 404 page
 function redirectTo404Page() {
     header("HTTP/1.0 404 Not Found");
     header("Location: " . PROJECT_DIR . "404.php");
+    exit();
 }
 
 // Sanitize HTML
@@ -145,7 +140,10 @@ function sanitizeHtml($inputHTML) {
 }
 
 function logMessage($message) {
-    $logfile = __DIR__ . '/../logs/debug.log';
-    file_put_contents($logfile, $message . PHP_EOL, FILE_APPEND);
+    if (DEBUG_MODE) { // Only log in debug mode
+        $logfile = __DIR__ . '/../logs/debug.log';
+        file_put_contents($logfile, $message . PHP_EOL, FILE_APPEND);
+    }
 }
+
 ?>
