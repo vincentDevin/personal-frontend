@@ -85,7 +85,7 @@ require("../includes/header.inc.php");
                 <input type="password" name="txtPassword" id="txtPassword" required />
                 <br>
                 <!-- reCAPTCHA widget -->
-                <div class="g-recaptcha" data-sitekey="<?php echo(CAPTCHA_SITE); ?>"></div>
+                <div class="g-recaptcha" data-sitekey="<?php echo(CAPTCHA_SITE); ?>" data-callback="onRecaptchaSuccess"></div>
                 <br>
                 <input type="submit" value="Log In">
             </div>
@@ -94,6 +94,12 @@ require("../includes/header.inc.php");
 </main>
 
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script>
+    // This function is called when the reCAPTCHA is successfully completed
+    function onRecaptchaSuccess(token) {
+        console.log("reCAPTCHA token:", token);
+    }
+</script>
 
 <?php
 require("../includes/footer.inc.php");
