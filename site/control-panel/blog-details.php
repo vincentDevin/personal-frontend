@@ -10,7 +10,7 @@ $errorMessage = '';
 if ($_SERVER['REQUEST_METHOD'] == "GET") {
     if (isset($_GET['pageId'])) {
         $pageId = $_GET['pageId'];
-        $url = "https://express_api:3000/api/pages/{$pageId}";
+        $url = "https://devin-vincent.com/api/pages/{$pageId}";
         $token = $_SESSION['token']; // Ensure the token is available in the session
         $response = callAPI('GET', $url, false, $token);
 

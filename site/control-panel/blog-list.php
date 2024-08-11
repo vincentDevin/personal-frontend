@@ -9,7 +9,7 @@ $pageDescription = "";
 if (isset($_GET['deletePageId'])) {
     $pageId = intval($_GET['deletePageId']);
     if ($pageId > 0) {
-        $url = "https://express_api:3000/api/pages/{$pageId}";
+        $url = "https://devin-vincent.com/api/pages/{$pageId}";
         $token = $_SESSION['token']; // Ensure the token is available in the session
         $response = callAPI('DELETE', $url, false, $token);
 
@@ -29,7 +29,7 @@ require("../includes/header.inc.php");
         <h3>Blog List</h3>
         <?php
         // Fetch the blog pages using the API
-        $url = "https://express_api:3000/api/pages";
+        $url = "https://devin-vincent.com/api/pages";
         $token = $_SESSION['token']; // Ensure the token is available in the session
         $response = callAPI('GET', $url, ['activeOnly' => false], $token);
 

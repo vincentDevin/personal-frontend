@@ -3,25 +3,11 @@ require_once("includes/config.inc.php");
 $pageTitle = "Contact";
 $pageDescription = "This page will allow you to contact me!";
 
-if($_SERVER['REQUEST_METHOD'] == "POST") {
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
     // Honeypot field - should be left empty by real users
     $honeypot = $_POST['gender'] ?? "";
     if (!empty($honeypot)) {
         // If the honeypot field is filled, it's likely a bot submission
-        header("Location: " . PROJECT_DIR . "error.php");
-        exit();
-    }
-
-    // Verify the reCAPTCHA response
-    $recaptchaSecret = CAPTCHA_SECRET; // Replace with your secret key
-    $recaptchaResponse = $_POST['g-recaptcha-response'] ?? '';
-    $recaptchaUrl = 'https://www.google.com/recaptcha/api/siteverify';
-    
-    $recaptchaValidation = file_get_contents($recaptchaUrl . '?secret=' . $recaptchaSecret . '&response=' . $recaptchaResponse);
-    $recaptchaResult = json_decode($recaptchaValidation, true);
-
-    if(!$recaptchaResult['success']) {
-        // If reCAPTCHA failed, redirect to error page
         header("Location: " . PROJECT_DIR . "error.php");
         exit();
     }
@@ -43,7 +29,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
         }
     }
 
-    if(validateContactData($firstName, $lastName, $email, $comments)) {
+    if (validateContactData($firstName, $lastName, $email, $comments)) {
         // Prepare data for API call
         $data = [
             'firstName' => $firstName,
@@ -82,7 +68,7 @@ require("includes/header.inc.php");
 <main>
     <div class="content-frame-contact">
         <h1>Contact Me</h1>
-        
+
         <div class="form-container">
             <form id="contactForm" method="POST" action="">
                 <div class="form-validation-messages">
@@ -117,12 +103,12 @@ require("includes/footer.inc.php");
 
 function validateContactData($firstName, $lastName, $email, $comments) {
     // Make sure that none of the inputs are empty
-    if(empty($firstName) || empty($lastName) || empty($comments) || empty($email)) {
+    if (empty($firstName) || empty($lastName) || empty($comments) || empty($email)) {
         return false;
     }
 
     // Make sure the email entered is a valid one
-    if(filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+    if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
         return false;
     }
 
