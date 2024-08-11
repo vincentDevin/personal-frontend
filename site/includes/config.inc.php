@@ -8,14 +8,21 @@ if (file_exists(__DIR__ . '/../.env')) {
     }
 }
 
+// Determine if the connection is secure (HTTPS)
+$isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443;
+
 // Set session security settings before starting the session
 ini_set('session.cookie_httponly', 1);
-ini_set('session.cookie_secure', 1); // Ensure this is only set when using HTTPS in production
 ini_set('session.use_strict_mode', 1);
-ini_set('session.cookie_samesite', 'Strict');
 
 // Start the session
-session_start();
+session_start([
+    'cookie_lifetime' => 0, // Session cookie expires when the browser closes
+    'cookie_secure' => $isSecure, // Use HTTPS
+    'cookie_httponly' => true, // Prevent JavaScript access to the session cookie
+    'cookie_samesite' => 'Lax', // Adjust this if needed
+    'use_strict_mode' => true,
+]);
 
 // API Base URL
 define('API_BASE_URL', 'https://devin-vincent.com/api'); 
@@ -24,12 +31,12 @@ define('API_BASE_URL', 'https://devin-vincent.com/api');
 if ($_SERVER['SERVER_NAME'] == "localhost") {
     // Settings for dev environment
     define("PROJECT_DIR", "/");
-    define("DEBUG_MODE", TRUE);
+    define("DEBUG_MODE", true);
     define("ADMIN_EMAIL", "vincentdevin111@gmail.com");
 } else {
     // Settings for live site
     define("PROJECT_DIR", "/");
-    define("DEBUG_MODE", FALSE); // Disable debug mode for production
+    define("DEBUG_MODE", false); // Disable debug mode for production
     define("ADMIN_EMAIL", "vincentdevin111@gmail.com");
 
     // Secure CAPTCHA keys for production from .env file
@@ -71,7 +78,6 @@ function customErrorHandler($errno, $errstr, $errfile, $errline) {
         exit();
     }
 }
-
 
 // Wrapper function for sending emails
 function sendEmail($to, $subject, $msg, $headers = "") {

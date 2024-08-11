@@ -1,12 +1,12 @@
 <?php
-require_once("../includes/config.inc.php");
+require_once("../includes/config.inc.php"); // Include the configuration file
 
 $pageTitle = "Login";
 $pageDescription = "";
 
 // Function to make a POST request to the API
 function authenticateUser($username, $password, $recaptchaResponse) {
-    $apiUrl = "https://devin-vincent.com/api/auth/login"; // Adjust the URL as needed
+    $apiUrl = API_BASE_URL . "/auth/login"; // Use the defined constant for the API URL
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $apiUrl);
