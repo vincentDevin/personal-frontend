@@ -29,7 +29,7 @@ if ($_SERVER['SERVER_NAME'] == "localhost") {
 } else {
     // Settings for live site
     define("PROJECT_DIR", "/");
-    define("DEBUG_MODE", FALSE); // Disable debug mode for production
+    define("DEBUG_MODE", TRUE); // Disable debug mode for production
     define("ADMIN_EMAIL", "vincentdevin111@gmail.com");
 
     // Secure CAPTCHA keys for production from .env file
