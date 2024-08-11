@@ -30,14 +30,17 @@ try {
     }
 
 } catch (Exception $e) {
+    // Log the error in both production and debug mode
+    error_log("[" . date('Y-m-d H:i:s') . "] Blog List Page Error: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine());
+
     if (DEBUG_MODE) {
+        // Display the error to the user in debug mode
         echo "<p>Exception: " . htmlspecialchars($e->getMessage()) . "</p>";
-        error_log("Blog List Page Error: " . $e->getMessage()); // Log errors only in DEBUG mode
     } else {
+        // Generic error message for production
         echo "<p>Sorry, something went wrong while loading the blog posts. Please try again later.</p>";
     }
 }
-
 
 function createBlogList(array $pages): string {
     $html = "<ul class=\"blog-list\">";
