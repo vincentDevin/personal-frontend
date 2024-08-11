@@ -5,16 +5,12 @@ $pageTitle = "Blog";
 require("../includes/header.inc.php");
 
 try {
-    // Use the global API_BASE_URL
     $apiUrl = API_BASE_URL . '/pages';
-
-    // Call API to get the list of active blog pages
     $response = callAPI('GET', $apiUrl);
 
     if ($response['status_code'] === 200) {
         $activePages = $response['response'];
 
-        // Check if the API response is valid
         if (json_last_error() !== JSON_ERROR_NONE || !is_array($activePages)) {
             throw new Exception("Failed to decode JSON response: " . json_last_error_msg());
         }
@@ -34,11 +30,12 @@ try {
     }
 
 } catch (Exception $e) {
-    // Display the error message on the page
-    echo "<p>Exception: " . htmlspecialchars($e->getMessage()) . "</p>";
-
-    // Optionally, log the error to a file for debugging purposes
-    error_log("Blog List Page Error: " . $e->getMessage());
+    if (DEBUG_MODE) {
+        echo "<p>Exception: " . htmlspecialchars($e->getMessage()) . "</p>";
+        error_log("Blog List Page Error: " . $e->getMessage()); // Log errors only in DEBUG mode
+    } else {
+        echo "<p>Sorry, something went wrong while loading the blog posts. Please try again later.</p>";
+    }
 }
 
 function createBlogList(array $pages): string {
@@ -56,5 +53,6 @@ function createBlogList(array $pages): string {
     $html .= "</ul>";
     return $html;
 }
+
 require("../includes/footer.inc.php");
 ?>
