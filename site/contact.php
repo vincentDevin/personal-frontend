@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $lastName = $_POST['txtLastName'] ?? "";
     $email = $_POST['txtEmail'] ?? "";
     $comments = $_POST['txtComments'] ?? "";
+    $recaptchaResponse = $_POST['g-recaptcha-response'] ?? ''; // Get the reCAPTCHA response token
 
     // Simple spam keyword filtering
     $spamKeywords = ['viagra', 'free money', 'click here', 'buy now'];
@@ -35,7 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             'firstName' => $firstName,
             'lastName' => $lastName,
             'email' => $email,
-            'comments' => $comments
+            'comments' => $comments,
+            'g-recaptcha-response' => $recaptchaResponse // Include the reCAPTCHA response token
         ];
 
         // Make API call to save the contact form data
