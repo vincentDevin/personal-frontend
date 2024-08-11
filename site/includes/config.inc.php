@@ -26,8 +26,6 @@ if ($_SERVER['SERVER_NAME'] == "localhost") {
     define("PROJECT_DIR", "/");
     define("DEBUG_MODE", TRUE);
     define("ADMIN_EMAIL", "vincentdevin111@gmail.com");
-    define("CAPTCHA_SECRET", "6LftcSMqAAAAABcaIpFPjO1iQKt3sZp26VHiIg0x"); // localhost creds
-    define("CAPTCHA_SITE", "6LftcSMqAAAAAMdZL_MNBpd8u2-M1T2D7cvPpqu0"); // localhost creds
 } else {
     // Settings for live site
     define("PROJECT_DIR", "/");
