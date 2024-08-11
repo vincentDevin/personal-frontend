@@ -29,7 +29,7 @@ if ($_SERVER['SERVER_NAME'] == "localhost") {
 } else {
     // Settings for live site
     define("PROJECT_DIR", "/");
-    define("DEBUG_MODE", FALSE); // Disable debug mode for production
+    define("DEBUG_MODE", TRUE); // Disable debug mode for production
     define("ADMIN_EMAIL", "vincentdevin111@gmail.com");
 
     // Secure CAPTCHA keys for production from .env file
@@ -54,21 +54,24 @@ if (DEBUG_MODE) {
 // Custom error handler
 function customErrorHandler($errno, $errstr, $errfile, $errline) {
     $errorMsg = "Error: [$errno] $errstr - $errfile:$errline";
-    $logPath = __DIR__ . '/../logs/error.log';
-
-    if (!file_exists($logPath)) {
-        mkdir(dirname($logPath), 0777, true);
-    }
-    error_log($errorMsg, 3, $logPath);
-
+    // Only attempt to log if DEBUG_MODE is on
     if (DEBUG_MODE) {
+        $logPath = __DIR__ . '/../logs/error.log';
+        
+        // Check if the directory exists and is writable
+        if (is_writable(dirname($logPath)) || (!file_exists($logPath) && mkdir(dirname($logPath), 0777, true))) {
+            error_log($errorMsg, 3, $logPath);
+        }
+
+        // Display error in debug mode
         echo "<b>Error:</b> [$errno] $errstr - $errfile:$errline<br>";
     } else {
-        // No output to the user in production
+        // Redirect to a generic error page in production
         header("Location: " . PROJECT_DIR . "error.php");
         exit();
     }
 }
+
 
 // Wrapper function for sending emails
 function sendEmail($to, $subject, $msg, $headers = "") {

@@ -38,6 +38,7 @@ try {
     }
 }
 
+
 function createBlogList(array $pages): string {
     $html = "<ul class=\"blog-list\">";
     foreach ($pages as $p) {
