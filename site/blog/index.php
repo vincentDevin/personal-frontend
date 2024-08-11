@@ -33,7 +33,6 @@ try {
         throw new Exception("Failed to fetch blog pages. HTTP Status Code: " . $response['status_code']);
     }
 
-    require("../includes/footer.inc.php");
 } catch (Exception $e) {
     // Display the error message on the page
     echo "<p>Exception: " . htmlspecialchars($e->getMessage()) . "</p>";
@@ -57,4 +56,5 @@ function createBlogList(array $pages): string {
     $html .= "</ul>";
     return $html;
 }
+require("../includes/footer.inc.php");
 ?>
