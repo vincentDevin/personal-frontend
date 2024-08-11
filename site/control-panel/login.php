@@ -6,7 +6,7 @@ $pageDescription = "";
 
 // Function to make a POST request to the API
 function authenticateUser($username, $password, $recaptchaResponse) {
-    $apiUrl = "https://express_api:3000/api/auth/login"; // Adjust the URL as needed
+    $apiUrl = "https://devin-vincent.com/api/auth/login"; // Adjust the URL as needed
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $apiUrl);
