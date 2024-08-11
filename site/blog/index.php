@@ -2,10 +2,9 @@
 require_once("../includes/config.inc.php");
 
 $pageTitle = "Blog";
+require("../includes/header.inc.php");
 
 try {
-    require("../includes/header.inc.php");
-
     // Use the global API_BASE_URL
     $apiUrl = API_BASE_URL . '/pages';
 
