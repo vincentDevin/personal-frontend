@@ -8,6 +8,9 @@ services:
       - ./site:/var/www/html
     networks:
       - frontend_network
+    environment:
+      - CAPTCHA_SECRET=${CAPTCHA_SECRET}
+      - CAPTCHA_SITE=${CAPTCHA_SITE}
 
   nginx:
     image: nginx:latest
