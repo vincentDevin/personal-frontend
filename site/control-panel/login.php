@@ -1,6 +1,11 @@
 <?php
 require_once("../includes/config.inc.php"); // Include the configuration file
 
+// Ensure session is started only once
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 $pageTitle = "Login";
 $pageDescription = "";
 
@@ -47,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $authResponse = authenticateUser($userNameEntered, $passwordEntered, $recaptchaResponse);
 
         if ($authResponse && isset($authResponse['token'])) {
-            session_regenerate_id(true);
+            session_regenerate_id(true); // Regenerate session ID to prevent session fixation attacks
             $_SESSION['authenticated'] = "yes";
             $_SESSION['username'] = $userNameEntered; // Store the username in session
             
