@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $authResponse = authenticateUser($userNameEntered, $passwordEntered, $recaptchaResponse);
 
         if ($authResponse && isset($authResponse['token'])) {
-            session_regenerate_id(true); // Regenerate session ID to prevent session fixation attacks
+            //session_regenerate_id(true); // Regenerate session ID to prevent session fixation attacks
             $_SESSION['authenticated'] = "yes";
             $_SESSION['username'] = $userNameEntered; // Store the username in session
             
