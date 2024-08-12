@@ -84,11 +84,6 @@ function sendEmail($to, $subject, $msg, $headers = "") {
     return mail($to, $subject, $msg, $headers);
 }
 
-// Function to store JWT token securely
-function storeToken($token) {
-    $_SESSION['token'] = $token; // Store token in session
-}
-
 // Function to retrieve JWT token
 function getToken() {
     return $_SESSION['token'] ?? null;
