@@ -9,7 +9,7 @@ $pageDescription = "";
 if (isset($_GET['deletePageId'])) {
     $pageId = intval($_GET['deletePageId']);
     if ($pageId > 0) {
-        $url = "https://devin-vincent.com/api/pages/{$pageId}";
+        $url = API_BASE_URL . "/control-panel/pages/{$pageId}";
         $token = $_SESSION['token']; // Ensure the token is available in the session
         $response = callAPI('DELETE', $url, false, $token);
 
@@ -29,9 +29,9 @@ require("../includes/header.inc.php");
         <h3>Blog List</h3>
         <?php
         // Fetch the blog pages using the API
-        $url = "https://devin-vincent.com/api/pages";
+        $url = API_BASE_URL . "/control-panel/pages/all";
         $token = $_SESSION['token']; // Ensure the token is available in the session
-        $response = callAPI('GET', $url, ['activeOnly' => false], $token);
+        $response = callAPI('GET', $url, false, $token);
 
         if ($response['status_code'] == 200) {
             $pages = $response['response'];
@@ -62,11 +62,11 @@ function displayPages($pages) {
     // table rows
     foreach($pages as $page) {
         $html .= "<tr>";
-        $html .= "<td>{$page['title']}</td>";
-        $html .= "<td>{$page['publishedDate']}</td>";
-        $html .= "<td>{$page['active']}</td>";
-        $html .= "<td><a href=\"blog-details.php?pageId={$page['pageId']}\">EDIT</a></td>";
-        $html .= "<td><a href=\"blog-list.php?deletePageId={$page['pageId']}\" onclick=\"return confirm('Are you sure you want to delete this page?');\">DELETE</a></td>";
+        $html .= "<td>" . htmlspecialchars($page['title']) . "</td>";
+        $html .= "<td>" . htmlspecialchars($page['publishedDate']) . "</td>";
+        $html .= "<td>" . htmlspecialchars($page['active']) . "</td>";
+        $html .= "<td><a href=\"blog-details.php?pageId=" . htmlspecialchars($page['pageId']) . "\">EDIT</a></td>";
+        $html .= "<td><a href=\"blog-list.php?deletePageId=" . htmlspecialchars($page['pageId']) . "\" onclick=\"return confirm('Are you sure you want to delete this page?');\">DELETE</a></td>";
         $html .= "</tr>";
     }
 

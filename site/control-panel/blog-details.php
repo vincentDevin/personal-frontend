@@ -1,162 +1,115 @@
 <?php
-require_once("../includes/config.inc.php");
-require("authentication-check.inc.php");
+include_once '../includes/config.inc.php';
 
-$pageTitle = "Blog Details";
-$pageDescription = "";
+// Check if the user is authenticated (you should already have this check in place)
+if (!isset($_SESSION['token'])) {
+    header('Location: login.php');
+    exit;
+}
 
-$errorMessage = '';
+// Get the page ID from the query parameter
+$pageId = isset($_GET['pageId']) ? intval($_GET['pageId']) : null;
+$method = $pageId ? 'PUT' : 'POST';
+$url = $API_BASE_URL . '/control-panel/pages' . ($pageId ? '/' . $pageId : '');
 
-if ($_SERVER['REQUEST_METHOD'] == "GET") {
-    if (isset($_GET['pageId'])) {
-        $pageId = $_GET['pageId'];
-        $url = API_BASE_URL . "/pages/{$pageId}";
-        $token = retrieveToken(); // Use the secure method to retrieve the token
-        $response = callAPI('GET', $url, false, $token);
+// Initialize variables for form fields
+$title = '';
+$description = '';
+$content = '';
+$path = '';
+$categoryId = '';
+$publishedDate = '';
+$setActive = 'yes'; // Default to 'yes'
 
-        if ($response['status_code'] == 200) {
-            $page = $response['response'];
-            // Set default values for the form fields
-            $path = $page['path'];
-            $title = $page['title'];
-            $description = $page['description'];
-            $content = $page['content'];
-            $publishedDate = $page['publishedDate'];
-            $categoryId = $page['categoryId'];
-            $setActive = $page['active'];
-        } else {
-            // Redirect to error page if an error occurs
-            header("Location: /error.php");
-            exit();
-        }
+// If editing an existing page, fetch the details
+if ($pageId) {
+    $response = callAPI('GET', $API_BASE_URL . '/control-panel/pages/all/' . $pageId, null, $_SESSION['token']);
+    $pageData = json_decode($response, true);
+
+    if (isset($pageData['error'])) {
+        echo '<p>Error fetching page data: ' . htmlspecialchars($pageData['error']) . '</p>';
     } else {
-        // Default values if no pageId is provided
-        $pageId = '';
-        $path = '';
-        $title = '';
-        $description = '';
-        $content = '';
-        $publishedDate = '';
-        $categoryId = '';
-        $setActive = '';
+        $title = $pageData['title'];
+        $description = $pageData['description'];
+        $content = $pageData['content'];
+        $path = $pageData['path'];
+        $categoryId = $pageData['categoryId'];
+        $publishedDate = $pageData['publishedDate'];
+        $setActive = $pageData['active'];
     }
-} elseif ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $pageId = $_POST['pageId'] ?? '';
-    $path = $_POST['path'] ?? '';
+}
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'] ?? '';
     $description = $_POST['description'] ?? '';
     $content = $_POST['content'] ?? '';
-    $publishedDate = $_POST['publishedDate'] ?? '';
+    $path = $_POST['path'] ?? '';
     $categoryId = $_POST['categoryId'] ?? '';
-    $setActive = $_POST['active'] ?? 'no';
+    $publishedDate = $_POST['publishedDate'] ?? '';
+    $setActive = $_POST['setActive'] ?? 'no';
 
-    if (validateBlogPostData($title, $description, $content, $categoryId, $setActive)) {
-        $data = [
-            'title' => $title,
-            'content' => $content,
-            'description' => $description,
-            'active' => $setActive,
-            'categoryId' => $categoryId,
-            'path' => $path,
-            'publishedDate' => $publishedDate,
-        ];
-        $token = retrieveToken(); // Use the secure method to retrieve the token
+    $data = [
+        'title' => $title,
+        'description' => $description,
+        'content' => $content,
+        'path' => $path,
+        'categoryId' => $categoryId,
+        'publishedDate' => $publishedDate,
+        'setActive' => $setActive
+    ];
 
-        if (!empty($pageId)) {
-            $url = API_BASE_URL . "/pages/{$pageId}";
-            $response = callAPI('PUT', $url, $data, $token);
+    $response = callAPI($method, $url, json_encode($data), $_SESSION['token']);
+    $result = json_decode($response, true);
 
-            if ($response['status_code'] == 200) {
-                $msg = "Blog page updated";
-                sendEmail(ADMIN_EMAIL, "Blog Post Updated!", $msg);
-                header("Location: blog-list.php"); // Redirect to blog-list.php
-                exit();
-            } else {
-                // Redirect to error page if an error occurs
-                header("Location: /error.php");
-                exit();
-            }
-        } else {
-            $url = API_BASE_URL . "/pages";
-            $response = callAPI('POST', $url, $data, $token);
-
-            if ($response['status_code'] == 200) {
-                $msg = "New blog page posted";
-                sendEmail(ADMIN_EMAIL, "New Blog Post!", $msg);
-                header("Location: blog-list.php"); // Redirect to blog-list.php
-                exit();
-            } else {
-                // Redirect to error page if an error occurs
-                header("Location: /error.php");
-                exit();
-            }
-        }
+    if (isset($result['success'])) {
+        header('Location: blog-list.php');
+        exit;
     } else {
-        $errorMessage = "Could not validate form.";
+        echo '<p>Error updating the page: ' . htmlspecialchars($result['error'] ?? 'Unknown error') . '</p>';
     }
-} else {
-    // Only accept GET and POST requests
-    header("Location: /error.php");
-    exit();
 }
-
-require("../includes/header.inc.php");
 ?>
-<main>
-    <div class="content-frame">
-        <h3>Blog Details</h3>
-        <?php if (!empty($errorMessage)) : ?>
-            <p class="error"><?php echo htmlspecialchars($errorMessage); ?></p>
-        <?php endif; ?>
-        <form class="control-panel" method="POST" action="<?php echo($_SERVER['PHP_SELF']) ?>" onsubmit="setDefaultDate()">
-            <input type="hidden" name="pageId" value="<?php echo htmlentities($pageId); ?>" />
-            <label>Path Word</label>
-            <input type="text" name="path" placeholder="mypost" value="<?php echo htmlentities($path); ?>" />
-            <label>Title</label>
-            <input type="text" name="title" value="<?php echo htmlentities($title); ?>" />
-            <label>Description</label>
-            <textarea name="description"><?php echo htmlentities($description); ?></textarea>
-            <label>Content</label>
-            <textarea name="content"><?php echo htmlentities($content); ?></textarea>
-            <label>Published Date (YYYY-MM-DD)</label>
-            <input type="date" name="publishedDate" value="<?php echo htmlentities($publishedDate); ?>" />
-            <label>Category</label>
-            <select name="categoryId">
-                <option value="1" <?php if ($categoryId == 1) echo 'selected'; ?>>Test</option>
-                <option value="2" <?php if ($categoryId == 2) echo 'selected'; ?>>Test 2</option>
-            </select>
-            <label>Active</label>
-            <input type="radio" name="active" value="yes" <?php if ($setActive == 'yes') echo 'checked'; ?>> YES    
-            <input type="radio" name="active" value="no" <?php if ($setActive == 'no') echo 'checked'; ?>> NO
-            <br>    
-            <input type="submit" value="SAVE" />    
-        </form>
-    </div>
-</main>
-<script>
-function setDefaultDate() {
-    var dateField = document.querySelector('input[name="publishedDate"]');
-    if (dateField.value === '') {
-        // Get current date
-        var today = new Date();
-        var month = (today.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
-        var day = today.getDate().toString().padStart(2, '0');
-        var year = today.getFullYear();
-        
-        // Set the date in YYYY-MM-DD format
-        dateField.value = `${year}-${month}-${day}`;
-    }
-}
-</script>
-<?php
-require("../includes/footer.inc.php");
 
-function validateBlogPostData(string $title, string $description, string $content, string $categoryId, string $active): bool {
-    if (empty($title) || empty($description) || empty($content) || empty($categoryId) || empty($active)) {
-        echo "Fields left empty";
-        return false;
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $pageId ? 'Edit' : 'Create'; ?> Blog Page</title>
+    <!-- Include any additional CSS/JS here -->
+</head>
+<body>
+    <h1><?php echo $pageId ? 'Edit' : 'Create'; ?> Blog Page</h1>
     
-    return true;
-}
-?>
+    <form method="POST" action="">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($title); ?>" required>
+        
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required><?php echo htmlspecialchars($description); ?></textarea>
+        
+        <label for="content">Content:</label>
+        <textarea id="content" name="content" required><?php echo htmlspecialchars($content); ?></textarea>
+        
+        <label for="path">Path:</label>
+        <input type="text" id="path" name="path" value="<?php echo htmlspecialchars($path); ?>" required>
+        
+        <label for="categoryId">Category ID:</label>
+        <input type="number" id="categoryId" name="categoryId" value="<?php echo htmlspecialchars($categoryId); ?>" required>
+        
+        <label for="publishedDate">Published Date:</label>
+        <input type="date" id="publishedDate" name="publishedDate" value="<?php echo htmlspecialchars($publishedDate); ?>" required>
+        
+        <label for="setActive">Active:</label>
+        <select id="setActive" name="setActive">
+            <option value="yes" <?php echo $setActive === 'yes' ? 'selected' : ''; ?>>Yes</option>
+            <option value="no" <?php echo $setActive === 'no' ? 'selected' : ''; ?>>No</option>
+        </select>
+        
+        <button type="submit"><?php echo $pageId ? 'Update' : 'Create'; ?> Page</button>
+    </form>
+
+    <a href="blog-list.php">Back to Blog List</a>
+</body>
+</html>
