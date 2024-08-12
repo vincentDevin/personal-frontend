@@ -33,10 +33,15 @@ function authenticateUser($username, $password, $recaptchaResponse) {
     }
 }
 
+// Function to store the JWT token in a session variable
+function storeToken($token) {
+    $_SESSION['token'] = $token; // Store the token in the session
+}
+
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $userNameEntered = $_POST['txtUserName'] ?? NULL;
-    $passwordEntered = $_POST['txtPassword'] ?? NULL;
-    $recaptchaResponse = $_POST['g-recaptcha-response'] ?? NULL;
+    $userNameEntered = $_POST['txtUserName'] ?? null;
+    $passwordEntered = $_POST['txtPassword'] ?? null;
+    $recaptchaResponse = $_POST['g-recaptcha-response'] ?? null;
 
     if ($userNameEntered && $passwordEntered && $recaptchaResponse) {
         $authResponse = authenticateUser($userNameEntered, $passwordEntered, $recaptchaResponse);
