@@ -1,6 +1,8 @@
 <?php
 include_once '../includes/config.inc.php';
-require_once("../includes/header.inc.php");
+
+$pageTitle = "Blog Details";
+require("../includes/header.inc.php");
 
 // Check if the user is authenticated
 if (!isset($_SESSION['token'])) {
@@ -109,5 +111,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </main>
 
 <?php
-require_once("../includes/footer.inc.php");
+require("../includes/footer.inc.php");
 ?>
