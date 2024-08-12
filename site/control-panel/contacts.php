@@ -7,14 +7,14 @@ $pageDescription = "";
 
 require("../includes/header.inc.php");
 
-// Assuming the token is stored in the session after login
-$token = $_SESSION['token'] ?? null;
+// Securely retrieve the token from the session
+$token = retrieveToken();
 
 // Fetch contact submissions from the API using the global API call function
 $response = callAPI('GET', API_BASE_URL . '/contacts', false, $token);
 
 // Check for errors in the API response
-if ($response['status_code'] == 200) {
+if ($response['status_code'] == 200 && !empty($response['response'])) {
     $contacts = $response['response'];
 } else {
     $contacts = [];

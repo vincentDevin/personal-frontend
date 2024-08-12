@@ -10,8 +10,8 @@ $errorMessage = '';
 if ($_SERVER['REQUEST_METHOD'] == "GET") {
     if (isset($_GET['pageId'])) {
         $pageId = $_GET['pageId'];
-        $url = "https://devin-vincent.com/api/pages/{$pageId}";
-        $token = $_SESSION['token']; // Ensure the token is available in the session
+        $url = API_BASE_URL . "/pages/{$pageId}";
+        $token = retrieveToken(); // Use the secure method to retrieve the token
         $response = callAPI('GET', $url, false, $token);
 
         if ($response['status_code'] == 200) {
@@ -49,18 +49,19 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
     $setActive = $_POST['active'] ?? 'no';
 
     if (validateBlogPostData($title, $description, $content, $categoryId, $setActive)) {
+        $data = [
+            'title' => $title,
+            'content' => $content,
+            'description' => $description,
+            'active' => $setActive,
+            'categoryId' => $categoryId,
+            'path' => $path,
+            'publishedDate' => $publishedDate,
+        ];
+        $token = retrieveToken(); // Use the secure method to retrieve the token
+
         if (!empty($pageId)) {
-            $url = "https://express_api:3000/api/pages/{$pageId}";
-            $data = [
-                'title' => $title,
-                'content' => $content,
-                'description' => $description,
-                'active' => $setActive,
-                'categoryId' => $categoryId,
-                'path' => $path,
-                'publishedDate' => $publishedDate,
-            ];
-            $token = $_SESSION['token']; // Ensure the token is available in the session
+            $url = API_BASE_URL . "/pages/{$pageId}";
             $response = callAPI('PUT', $url, $data, $token);
 
             if ($response['status_code'] == 200) {
@@ -72,17 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 $errorMessage = "Query Issue: page not updated. HTTP Status Code: {$response['status_code']}";
             }
         } else {
-            $url = "https://express_api:3000/api/pages";
-            $data = [
-                'title' => $title,
-                'content' => $content,
-                'description' => $description,
-                'active' => $setActive,
-                'categoryId' => $categoryId,
-                'path' => $path,
-                'publishedDate' => $publishedDate,
-            ];
-            $token = $_SESSION['token']; // Ensure the token is available in the session
+            $url = API_BASE_URL . "/pages";
             $response = callAPI('POST', $url, $data, $token);
 
             if ($response['status_code'] == 200) {
