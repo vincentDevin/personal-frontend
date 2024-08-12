@@ -1,7 +1,8 @@
 <?php
 include_once '../includes/config.inc.php';
+require_once("../includes/header.inc.php");
 
-// Check if the user is authenticated (you should already have this check in place)
+// Check if the user is authenticated
 if (!isset($_SESSION['token'])) {
     header('Location: login.php');
     exit;
@@ -71,45 +72,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $pageId ? 'Edit' : 'Create'; ?> Blog Page</title>
-    <!-- Include any additional CSS/JS here -->
-</head>
-<body>
-    <h1><?php echo $pageId ? 'Edit' : 'Create'; ?> Blog Page</h1>
-    
-    <form method="POST" action="">
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($title); ?>" required>
+<main>
+    <div class="content-frame">
+        <h1><?php echo $pageId ? 'Edit' : 'Create'; ?> Blog Page</h1>
         
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" required><?php echo htmlspecialchars($description); ?></textarea>
-        
-        <label for="content">Content:</label>
-        <textarea id="content" name="content" required><?php echo htmlspecialchars($content); ?></textarea>
-        
-        <label for="path">Path:</label>
-        <input type="text" id="path" name="path" value="<?php echo htmlspecialchars($path); ?>" required>
-        
-        <label for="categoryId">Category ID:</label>
-        <input type="number" id="categoryId" name="categoryId" value="<?php echo htmlspecialchars($categoryId); ?>" required>
-        
-        <label for="publishedDate">Published Date:</label>
-        <input type="date" id="publishedDate" name="publishedDate" value="<?php echo htmlspecialchars($publishedDate); ?>" required>
-        
-        <label for="setActive">Active:</label>
-        <select id="setActive" name="setActive">
-            <option value="yes" <?php echo $setActive === 'yes' ? 'selected' : ''; ?>>Yes</option>
-            <option value="no" <?php echo $setActive === 'no' ? 'selected' : ''; ?>>No</option>
-        </select>
-        
-        <button type="submit"><?php echo $pageId ? 'Update' : 'Create'; ?> Page</button>
-    </form>
+        <form method="POST" action="">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($title); ?>" required>
+            
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" required><?php echo htmlspecialchars($description); ?></textarea>
+            
+            <label for="content">Content:</label>
+            <textarea id="content" name="content" required><?php echo htmlspecialchars($content); ?></textarea>
+            
+            <label for="path">Path:</label>
+            <input type="text" id="path" name="path" value="<?php echo htmlspecialchars($path); ?>" required>
+            
+            <label for="categoryId">Category ID:</label>
+            <input type="number" id="categoryId" name="categoryId" value="<?php echo htmlspecialchars($categoryId); ?>" required>
+            
+            <label for="publishedDate">Published Date:</label>
+            <input type="date" id="publishedDate" name="publishedDate" value="<?php echo htmlspecialchars($publishedDate); ?>" required>
+            
+            <label for="setActive">Active:</label>
+            <select id="setActive" name="setActive">
+                <option value="yes" <?php echo $setActive === 'yes' ? 'selected' : ''; ?>>Yes</option>
+                <option value="no" <?php echo $setActive === 'no' ? 'selected' : ''; ?>>No</option>
+            </select>
+            
+            <button type="submit"><?php echo $pageId ? 'Update' : 'Create'; ?> Page</button>
+        </form>
 
-    <a href="blog-list.php">Back to Blog List</a>
-</body>
-</html>
+        <a href="blog-list.php">Back to Blog List</a>
+    </div>
+</main>
+
+<?php
+require_once("../includes/footer.inc.php");
+?>
