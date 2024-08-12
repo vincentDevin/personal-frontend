@@ -25,7 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
             $categoryId = $page['categoryId'];
             $setActive = $page['active'];
         } else {
-            $errorMessage = "Error fetching page. HTTP Status Code: {$response['status_code']}";
+            // Redirect to error page if an error occurs
+            header("Location: /error.php");
+            exit();
         }
     } else {
         // Default values if no pageId is provided
@@ -70,7 +72,9 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 header("Location: blog-list.php"); // Redirect to blog-list.php
                 exit();
             } else {
-                $errorMessage = "Query Issue: page not updated. HTTP Status Code: {$response['status_code']}";
+                // Redirect to error page if an error occurs
+                header("Location: /error.php");
+                exit();
             }
         } else {
             $url = API_BASE_URL . "/pages";
@@ -82,7 +86,9 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 header("Location: blog-list.php"); // Redirect to blog-list.php
                 exit();
             } else {
-                $errorMessage = "Query Issue: page not posted. HTTP Status Code: {$response['status_code']}";
+                // Redirect to error page if an error occurs
+                header("Location: /error.php");
+                exit();
             }
         }
     } else {
@@ -90,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
     }
 } else {
     // Only accept GET and POST requests
-    header("Location: " . PROJECT_DIR . "error.php");
+    header("Location: /error.php");
     exit();
 }
 
@@ -102,7 +108,7 @@ require("../includes/header.inc.php");
         <?php if (!empty($errorMessage)) : ?>
             <p class="error"><?php echo htmlspecialchars($errorMessage); ?></p>
         <?php endif; ?>
-        <form class="control-panel" method="POST" action="<?php echo($_SERVER['PHP_SELF']) ?>">
+        <form class="control-panel" method="POST" action="<?php echo($_SERVER['PHP_SELF']) ?>" onsubmit="setDefaultDate()">
             <input type="hidden" name="pageId" value="<?php echo htmlentities($pageId); ?>" />
             <label>Path Word</label>
             <input type="text" name="path" placeholder="mypost" value="<?php echo htmlentities($path); ?>" />
@@ -112,8 +118,8 @@ require("../includes/header.inc.php");
             <textarea name="description"><?php echo htmlentities($description); ?></textarea>
             <label>Content</label>
             <textarea name="content"><?php echo htmlentities($content); ?></textarea>
-            <label>Published Date (mm/dd/yyyy)</label>
-            <input name="publishedDate" value="<?php echo htmlentities($publishedDate); ?>" />
+            <label>Published Date (YYYY-MM-DD)</label>
+            <input type="date" name="publishedDate" value="<?php echo htmlentities($publishedDate); ?>" />
             <label>Category</label>
             <select name="categoryId">
                 <option value="1" <?php if ($categoryId == 1) echo 'selected'; ?>>Test</option>
@@ -127,7 +133,21 @@ require("../includes/header.inc.php");
         </form>
     </div>
 </main>
-
+<script>
+function setDefaultDate() {
+    var dateField = document.querySelector('input[name="publishedDate"]');
+    if (dateField.value === '') {
+        // Get current date
+        var today = new Date();
+        var month = (today.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+        var day = today.getDate().toString().padStart(2, '0');
+        var year = today.getFullYear();
+        
+        // Set the date in YYYY-MM-DD format
+        dateField.value = `${year}-${month}-${day}`;
+    }
+}
+</script>
 <?php
 require("../includes/footer.inc.php");
 
