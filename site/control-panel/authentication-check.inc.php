@@ -31,12 +31,14 @@ function verifyToken($token) {
     }
 }
 
-if (!isset($_SESSION['token'])) {
+// Retrieve the token securely
+$token = $_SESSION['token'] ?? null;
+
+if (!$token) {
     header("Location: login.php");
     exit();
 }
 
-$token = $_SESSION['token'];
 $authResponse = verifyToken($token);
 
 if (!$authResponse || !$authResponse['valid']) {

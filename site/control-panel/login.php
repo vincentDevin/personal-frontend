@@ -45,7 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             session_regenerate_id(true);
             $_SESSION['authenticated'] = "yes";
             $_SESSION['username'] = $userNameEntered; // Store the username in session
-            $_SESSION['token'] = $authResponse['token']; // Store the token in session
+            
+            // Store the token using the secure storage function
+            storeToken($authResponse['token']);
 
             header("Location: index.php");
             exit();
@@ -57,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $error = "Please complete all fields and the reCAPTCHA challenge.";
     }
 } elseif ($_SERVER['REQUEST_METHOD'] == "GET") {
-    // Destroy the session when user visits login page
+    // Destroy the session when user visits the login page
     if (isset($_COOKIE[session_name()])) {
         setcookie(session_name(), "", time() - 3600, "/");
     }

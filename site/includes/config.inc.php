@@ -25,7 +25,7 @@ session_start([
 ]);
 
 // API Base URL
-define('API_BASE_URL', 'https://devin-vincent.com/api'); 
+define('API_BASE_URL', 'https://devin-vincent.com/api');
 
 // Detect if the code is running on localhost or live server
 if ($_SERVER['SERVER_NAME'] == "localhost") {
@@ -84,7 +84,17 @@ function sendEmail($to, $subject, $msg, $headers = "") {
     return mail($to, $subject, $msg, $headers);
 }
 
-// Global function to call an API
+// Function to store JWT token securely
+function storeToken($token) {
+    $_SESSION['token'] = $token; // Store token in session
+}
+
+// Function to retrieve JWT token
+function getToken() {
+    return $_SESSION['token'] ?? null;
+}
+
+// Global function to call an API with optional JWT token
 function callAPI($method, $url, $data = false, $token = null) {
     $curl = curl_init();
 
@@ -114,6 +124,8 @@ function callAPI($method, $url, $data = false, $token = null) {
     $headers = ['Content-Type: application/json'];
     if ($token) {
         $headers[] = 'Authorization: Bearer ' . $token;
+    } elseif ($sessionToken = getToken()) {
+        $headers[] = 'Authorization: Bearer ' . $sessionToken;
     }
 
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
@@ -146,6 +158,7 @@ function sanitizeHtml($inputHTML) {
     return $inputHTML;
 }
 
+// Function to log debug messages
 function logMessage($message) {
     if (DEBUG_MODE) { // Only log in debug mode
         $logfile = __DIR__ . '/../logs/debug.log';
