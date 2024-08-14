@@ -85,7 +85,7 @@ require("../includes/header.inc.php");
             <textarea id="description" name="description" required><?php echo htmlspecialchars($description); ?></textarea>
             
             <label for="content">Content:</label>
-            <textarea id="content" name="content" required><?php echo sanitizeHtml($content); ?></textarea>
+            <textarea id="content" name="content" required><?php echo $content; ?></textarea>
             
             <label for="path">Path:</label>
             <input type="text" id="path" name="path" value="<?php echo htmlspecialchars($path); ?>" required>
