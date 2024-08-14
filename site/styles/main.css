@@ -440,7 +440,7 @@ ul.blog-list li:hover {
 }
 
 div.content-frame article h3.blog-post-title {
-  font-size: 24px;
+  font-size: 30px;
   color: #661a24;
 }
 div.content-frame article i.blog-post-date {
@@ -448,6 +448,12 @@ div.content-frame article i.blog-post-date {
 }
 div.content-frame article div.blog-post-content {
   padding-top: 20px;
+}
+div.content-frame article h2 {
+  font-size: 24px;
+}
+div.content-frame article h3 {
+  font-size: 30px;
 }
 
 div.home-container {

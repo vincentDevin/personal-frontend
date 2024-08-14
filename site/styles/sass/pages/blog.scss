@@ -53,7 +53,7 @@ ul.blog-list {
 div.content-frame {
     article {
         h3.blog-post-title {
-            font-size: 24px;
+            font-size: $font-size-secondary;
             color: $main-color;
         }
 
@@ -63,6 +63,14 @@ div.content-frame {
 
         div.blog-post-content {
             padding-top: 20px;
+        }
+        
+        h2 {
+            font-size: 24px;
+        }
+
+        h3 {
+            font-size: 30px;
         }
     }
 }
