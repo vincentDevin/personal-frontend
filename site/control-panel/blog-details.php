@@ -21,8 +21,9 @@ $setActive = 'yes'; // Default to 'yes'
 
 // If editing an existing page, fetch the details
 if ($pageId) {
-    $response = callAPI('GET', API_BASE_URL . '/control-panel/pages/all/' . $pageId, null, $_SESSION['token']);
-    $pageData = json_decode($response, true);
+    $apiResult = callAPI('GET', $API_BASE_URL . '/control-panel/pages/all/' . $pageId, null, $_SESSION['token']);
+    $pageData = $apiResult['response'];
+
 
     if (isset($pageData['error'])) {
         echo '<p>Error fetching page data: ' . htmlspecialchars($pageData['error']) . '</p>';
@@ -57,8 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'setActive' => $setActive
     ];
 
-    $response = callAPI($method, $url, json_encode($data), $_SESSION['token']);
-    $result = json_decode($response, true);
+    $apiResult = callAPI($method, $url, $data, $_SESSION['token']);
+    $result = $apiResult['response'];
+
 
     if (isset($result['success'])) {
         header('Location: blog-list.php');
