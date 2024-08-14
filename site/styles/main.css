@@ -455,6 +455,24 @@ div.content-frame article h2 {
 div.content-frame article h3 {
   font-size: 30px;
 }
+div.content-frame article ul {
+  list-style-type: disc;
+  margin-left: 1.5rem;
+  padding-left: 0;
+}
+div.content-frame article ul li {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+div.content-frame article ul li a {
+  color: #007bff;
+  text-decoration: none;
+}
+div.content-frame article ul li a:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
 
 div.home-container {
   text-align: center;

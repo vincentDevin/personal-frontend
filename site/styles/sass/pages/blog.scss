@@ -72,5 +72,29 @@ div.content-frame {
         h3 {
             font-size: 30px;
         }
+
+        ul {
+            list-style-type: disc; // Changes the list marker to a disc
+            margin-left: 1.5rem;   // Adds some space to the left of the list
+            padding-left: 0;       // Removes default padding
+          
+            // Styling for list items
+            li {
+              font-size: 1rem;    // Sets a base font size for the list items
+              line-height: 1.5;   // Adds space between lines for better readability
+              margin-bottom: 0.5rem; // Adds space below each list item
+          
+              // Optional: Styling for links within the list items
+              a {
+                color: #007bff;   // Sets the link color to a blue shade
+                text-decoration: none; // Removes underline from the link
+          
+                &:hover {
+                  text-decoration: underline; // Adds underline on hover for clarity
+                  color: #0056b3;   // Darkens the color on hover
+                }
+              }
+            }
+          }
     }
 }
