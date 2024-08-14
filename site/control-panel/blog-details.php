@@ -8,7 +8,7 @@ $pageDescription = "";
 // Get the page ID from the query parameter
 $pageId = isset($_GET['pageId']) ? intval($_GET['pageId']) : null;
 $method = $pageId ? 'PUT' : 'POST';
-$url = $API_BASE_URL . '/control-panel/pages' . ($pageId ? '/' . $pageId : '');
+$url = API_BASE_URL . '/control-panel/pages' . ($pageId ? '/' . $pageId : '');
 
 // Initialize variables for form fields
 $title = '';
@@ -21,7 +21,7 @@ $setActive = 'yes'; // Default to 'yes'
 
 // If editing an existing page, fetch the details
 if ($pageId) {
-    $response = callAPI('GET', $API_BASE_URL . '/control-panel/pages/all/' . $pageId, null, $_SESSION['token']);
+    $response = callAPI('GET', API_BASE_URL . '/control-panel/pages/all/' . $pageId, null, $_SESSION['token']);
     $pageData = json_decode($response, true);
 
     if (isset($pageData['error'])) {
