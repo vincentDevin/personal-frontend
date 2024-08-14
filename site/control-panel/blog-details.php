@@ -21,7 +21,7 @@ $setActive = 'yes'; // Default to 'yes'
 
 // If editing an existing page, fetch the details
 if ($pageId) {
-    $apiResult = callAPI('GET', $API_BASE_URL . '/control-panel/pages/all/' . $pageId, null, $_SESSION['token']);
+    $apiResult = callAPI('GET', API_BASE_URL . '/control-panel/pages/all/' . $pageId, null, $_SESSION['token']);
     $pageData = $apiResult['response'];
 
 
