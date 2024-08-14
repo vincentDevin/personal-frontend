@@ -1,14 +1,9 @@
 <?php
-include_once '../includes/config.inc.php';
+include_once('../includes/config.inc.php');
+require("authentication-check.inc.php");
 
 $pageTitle = "Blog Details";
-require("../includes/header.inc.php");
-
-// Check if the user is authenticated
-if (!isset($_SESSION['token'])) {
-    header('Location: login.php');
-    exit;
-}
+$pageDescription = "";
 
 // Get the page ID from the query parameter
 $pageId = isset($_GET['pageId']) ? intval($_GET['pageId']) : null;
@@ -72,11 +67,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo '<p>Error updating the page: ' . htmlspecialchars($result['error'] ?? 'Unknown error') . '</p>';
     }
 }
+
+require("../includes/header.inc.php");
 ?>
 
 <main>
     <div class="content-frame">
-        <h1><?php echo $pageId ? 'Edit' : 'Create'; ?> Blog Page</h1>
+        <h1>Blog Page</h1>
         
         <form method="POST" action="">
             <label for="title">Title:</label>

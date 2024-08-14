@@ -5,10 +5,8 @@ require("authentication-check.inc.php");
 $pageTitle = "Contact Submissions";
 $pageDescription = "";
 
-require("../includes/header.inc.php");
-
 // Securely retrieve the token from the session
-$token = retrieveToken();
+$token = getToken();
 
 // Fetch contact submissions from the API using the global API call function
 $response = callAPI('GET', API_BASE_URL . '/contacts', false, $token);
@@ -51,6 +49,8 @@ function displayContacts($contacts) {
 
     return $html;
 }
+
+require("../includes/header.inc.php");
 ?>
 <main>
     <div class="content-frame">
