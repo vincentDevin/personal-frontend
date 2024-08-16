@@ -1,0 +1,32 @@
+services:
+  php-apache:
+    build:
+      context: ./site
+      dockerfile: Dockerfile
+    container_name: php-apache
+    volumes:
+      - ./site:/var/www/html
+    networks:
+      - frontend_network
+    environment:
+      - CAPTCHA_SECRET=your_local_captcha_secret
+      - CAPTCHA_SITE=your_local_captcha_site
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./site:/usr/share/nginx/html  # Map site content for local development
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      # Omit SSL certificate volume for local development unless testing SSL locally
+    depends_on:
+      - php-apache
+    networks:
+      - frontend_network
+    ports:
+      - "8080:80"  # Expose port 80 on 8080 for local development
+      # Omit port 443 for local development unless testing SSL locally
+
+networks:
+  frontend_network:
+    driver: bridge

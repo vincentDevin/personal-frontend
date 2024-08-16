@@ -2,3 +2,4 @@
 /certbot
 .env
 ./site/logs/*
+site/logs
